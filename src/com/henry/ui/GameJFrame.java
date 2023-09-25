@@ -2,11 +2,12 @@ package com.henry.ui;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Random;
 
 public class GameJFrame extends JFrame {
     // 规定GameJFrame 这个界面表示的就是游戏的主界面
     // 跟游戏相关的逻辑都写在这个类中
-
+    int[] data = new int[15];
     public GameJFrame() throws HeadlessException {
         // 设置界面宽、高
 
@@ -16,12 +17,32 @@ public class GameJFrame extends JFrame {
         // 初始化菜单
         initJMenu();
 
+        // 打乱顺序
+        initData();
+
         // 初始化图片
         initImage();
 
 
         this.setVisible(true);
 
+    }
+
+    private void initData() {
+        // 打乱索引 (1 - 15)
+        for (int i = 0; i < 15; i++) {
+            data[i] = i + 1;
+        }
+        Random r = new Random();
+        for (int i = 0; i < 15; i++) {
+            int idx = r.nextInt(data.length);
+            int t = data[idx];
+            data[idx] = data[i];
+            data[i] = t;
+        }
+        for (int i = 0; i < 15; i++) {
+            System.out.println(data[i]);
+        }
     }
 
     private void initImage() {
@@ -32,15 +53,19 @@ public class GameJFrame extends JFrame {
         // 创建一个JLabel对象 (管理容器)
         JLabel jLabel = new JLabel(imageIcon);
         // 指定图片位置
-        jLabel.setBounds(0, 0, 105, 105);*/
+        jLabel.setBounds(0, 0, 105, 105);
+*/
 
-        for (int i = 0; i < 4; i ++) {
-            for (int j = 0; j < 4; j ++) {
-                if (i == 3 && j == 3) break;
+        int idx = 0;
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                if (idx > 14) break;
+                int num = data[idx];
                 // 左上角为原点，其他为坐标
-                JLabel jLabel = new JLabel(new ImageIcon("D:\\Henry_work\\Code\\Java\\out\\puzzleGame\\image\\animal\\animal1\\" + (i * 4 + j + 1) + ".jpg"));
+                JLabel jLabel = new JLabel(new ImageIcon("D:\\Henry_work\\Code\\Java\\out\\puzzleGame\\image\\animal\\animal1\\" + num + ".jpg"));
                 jLabel.setBounds(j * 105, i * 105, 105, 105);
                 this.getContentPane().add(jLabel);
+                idx ++;
             }
         }
 
@@ -48,7 +73,6 @@ public class GameJFrame extends JFrame {
         // this.add(jLabel);
         // this.getContentPane().add(jLabel);
     }
-
 
 
     private void initJMenu() {
