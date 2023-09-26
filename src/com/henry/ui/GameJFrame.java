@@ -3,20 +3,35 @@ package com.henry.ui;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Random;
 
-public class GameJFrame extends JFrame implements KeyListener {
+public class GameJFrame extends JFrame implements KeyListener, ActionListener {
     // 规定GameJFrame 这个界面表示的就是游戏的主界面
     // 跟游戏相关的逻辑都写在这个类中
     int[][] data = new int[4][4];
     int[][] win = new int[4][4];
     int x, y;
     int step = 0; // 记录步数
+    int num = 1;
+    // 创建子菜单
+    JMenu jMenu2 = new JMenu("更换图片");
 
+    // 创建更换图片子菜单下的条目对象
+    JMenuItem beauty = new JMenuItem("更换美女");
+    JMenuItem animal = new JMenuItem("更换动物");
+    JMenuItem activity = new JMenuItem("更换运动");
+    // 创建选项下面的条目对象
+    JMenuItem rePlayItem = new JMenuItem("再玩一局");
+    JMenuItem reLoginItem = new JMenuItem("重新登录");
+    JMenuItem closeItem = new JMenuItem("关闭游戏");
 
-    String path = "..\\puzzleGame\\image\\girl\\girl3\\";
+    JMenuItem accountItem = new JMenuItem("公众号");
+
+    String path = "..\\puzzleGame\\image\\girl\\girl" + num + "\\";
 
     public GameJFrame() throws HeadlessException {
         // 设置界面宽、高
@@ -75,7 +90,7 @@ public class GameJFrame extends JFrame implements KeyListener {
         }
 
         JLabel stepCount = new JLabel("步数" + step);
-        stepCount.setBounds(50,30,100,20);
+        stepCount.setBounds(50, 30, 100, 20);
         this.getContentPane().add(stepCount);
 
 /*        // 创建一个图片 ImageIcon 对象
@@ -116,23 +131,33 @@ public class GameJFrame extends JFrame implements KeyListener {
         JMenu functionjMenu = new JMenu("功能");
         JMenu aboutjMenu = new JMenu("关于我们");
 
-        // 创建选项下面的条目对象
-        JMenuItem rePlayItem = new JMenuItem("再玩一局");
-        JMenuItem reLoginItem = new JMenuItem("重新登录");
-        JMenuItem closeItem = new JMenuItem("关闭游戏");
 
-        JMenuItem accountItem = new JMenuItem("公众号");
 
         // 将条目加到对应的选项中
+        functionjMenu.add(jMenu2);
         functionjMenu.add(rePlayItem);
         functionjMenu.add(reLoginItem);
         functionjMenu.add(closeItem);
+        jMenu2.add(beauty);
+        jMenu2.add(animal);
+        jMenu2.add(activity);
 
         aboutjMenu.add(accountItem);
+
+        // 给条目绑定事件
+        beauty.addActionListener(this);
+        animal.addActionListener(this);
+        activity.addActionListener(this);
+
+        rePlayItem.addActionListener(this);
+        reLoginItem.addActionListener(this);
+        closeItem.addActionListener(this);
+        accountItem.addActionListener(this);
 
         // 将选项加入到菜单对象中
         jMenuBar.add(functionjMenu);
         jMenuBar.add(aboutjMenu);
+
 
         // 给整个界面设置菜单
         this.setJMenuBar(jMenuBar);
@@ -229,5 +254,60 @@ public class GameJFrame extends JFrame implements KeyListener {
             }
         }
         return true;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Object obj = e.getSource();
+        if (obj == rePlayItem) {
+            System.out.println("重新游戏");
+            step = 0;
+            initData();
+            initImage();
+        } else if (obj == reLoginItem) {
+            System.out.println("重新登录");
+            this.setVisible(false);
+            new LoginJFrame();
+
+        } else if (obj == closeItem) {
+            System.out.println("关闭游戏");
+            // 关闭虚拟机
+            System.exit(0);
+        } else if (obj == accountItem) {
+            System.out.println("公众号");
+            JDialog jDialog = new JDialog();
+            JLabel jLabel = new JLabel(new ImageIcon("..\\puzzleGame\\image\\about.png"));
+            jLabel.setBounds(0, 0, 258, 258);
+            jDialog.setSize(344, 344);
+            // 把图片加入弹窗
+            jDialog.getContentPane().add(jLabel);
+            jDialog.setAlwaysOnTop(true);
+
+            jDialog.setLocationRelativeTo(null);
+            // 不关闭弹窗无法进行后续操作
+            jDialog.setModal(true);
+            // 让弹窗显示出来
+            jDialog.setVisible(true);
+        } else if (obj == beauty) {
+            Random r = new Random();
+            num = r.nextInt(13) + 1;
+            path = "..\\puzzleGame\\image\\girl\\girl" + num + "\\";
+            initData();
+            initImage();
+        }
+        else if (obj == animal) {
+            Random r = new Random();
+            num = r.nextInt(8) + 1;
+            path = "..\\puzzleGame\\image\\animal\\animal" + num + "\\";
+            initData();
+            initImage();
+        } else if (obj == activity) {
+            Random r = new Random();
+            num = r.nextInt(10) + 1;
+            path = "..\\puzzleGame\\image\\sport\\sport" + num + "\\";
+            initData();
+            initImage();
+        }
+
     }
 }
